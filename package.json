@@ -29,9 +29,13 @@
       "plugin:vue/essential",
       "eslint:recommended"
     ],
-    "rules": {},
     "parserOptions": {
       "parser": "babel-eslint"
+    },
+    "rules": {
+      "vue/no-dupe-keys": "warning",
+      "no-console": "off",
+      "no-debugger": "off"
     }
   },
   "browserslist": [

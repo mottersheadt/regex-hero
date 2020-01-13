@@ -1,42 +1,78 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+    <div>
+      <h2>pass keys</h2>
+      <ul>
+        <li
+          v-bind:key="str"
+          v-for="str in passKeyTest"
+          v-bind:class="successRegex(str) ? 'green-text' : null"
+        >{{str}}</li>
+      </ul>
+    </div>
+    <div>
+      <h2>fail keys</h2>
+      <ul>
+        <li
+          v-bind:key="str"
+          v-for="str in failKeyTest"
+          v-bind:class="successRegex(str) ? 'red-text' : null"
+        >{{str}}</li>
+      </ul>
+    </div>
+    <input type="text" v-on:change="doRegexCheck" v-model="attemptedRegex">
+    <div v-show="passed">Success</div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: "HelloWorld",
+  data() {
+    return {
+      passKeyTest: ["123-123-abc", "234-631-zzz"],
+      failKeyTest: ["123-abc-abc", "234-ab-zzz"],
+      passed: false,
+      attemptedRegex: null
+    };
+  },
   props: {
     msg: String
-  }
-}
+  },
+  methods: {
+    doRegexCheck() {
+      var success = true;
+      for (let i = 0; i < this.passKeyTest.length; i++) {
+        let re = new RegExp(this.attemptedRegex);
+        if (!re.test(this.passKeyTest[i])) {
+          success = false;
+          break;
+        }
+      }
+      if (success) {
+        for (let i = 0; i++; i < this.failKeyTest.length) {
+          let re = new RegExp(this.attemptedRegex);
+          if (re.test(this.failKeyTest[i])) {
+            success = false;
+            break;
+          }
+        }
+      }
+      this.passed = success;
+      console.log(this.passed);
+    },
+    successRegex: function(str) {
+      if (!str) {
+        return null;
+      }
+      let re = new RegExp(this.attemptedRegex, "g");
+      let match = str.match(re);
+      return match && str === match[0];
+    }
+  },
+  computed: {}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -44,15 +80,13 @@ export default {
 h3 {
   margin: 40px 0 0;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
 a {
   color: #42b983;
+}
+.green-text {
+  color: rgb(76, 150, 76);
+}
+.red-text {
+  color: rgb(150, 76, 76);
 }
 </style>
