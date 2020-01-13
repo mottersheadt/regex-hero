@@ -1,6 +1,9 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
+    <h1>Regex Hero</h1>
+    <div>
+      Enter a regex that matches all the pass keys and doesn't match any of the fail keys.
+    </div>
     <div>
       <h2>pass keys</h2>
       <ul>
