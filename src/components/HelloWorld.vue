@@ -49,16 +49,14 @@ export default {
     doRegexCheck() {
       var success = true;
       for (let i = 0; i < this.passKeyTest.length; i++) {
-        let re = new RegExp(this.attemptedRegex);
-        if (!re.test(this.passKeyTest[i])) {
+        if (!this.successRegex(this.passKeyTest[i])) {
           success = false;
           break;
         }
       }
       if (success) {
         for (let i = 0; i++; i < this.failKeyTest.length) {
-          let re = new RegExp(this.attemptedRegex);
-          if (re.test(this.failKeyTest[i])) {
+          if (this.successRegex(this.failKeyTest[i])) {
             success = false;
             break;
           }
@@ -71,7 +69,7 @@ export default {
       if (!str) {
         return null;
       }
-      let re = new RegExp(this.attemptedRegex, "g");
+      let re = new RegExp(this.attemptedRegex);
       let match = str.match(re);
       return match && str === match[0];
     }
