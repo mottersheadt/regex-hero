@@ -12,6 +12,7 @@
       </ul>
     </div>
     <div>
+      <div id="game"></div>
       <h2>fail keys</h2>
       <ul>
         <li
@@ -27,6 +28,7 @@
 </template>
 
 <script>
+import * as PIXI from "pixi.js";
 export default {
   name: "HelloWorld",
   data() {
@@ -71,7 +73,63 @@ export default {
       return match && str === match[0];
     }
   },
-  computed: {}
+  created() {
+    debugger;
+
+    this.$nextTick(() => {
+      const app = new PIXI.Application({ transparent: true });
+      document.body.appendChild(app.view);
+
+      const { renderer, stage, loader } = app;
+    
+      // const container = new PIXI.Container();
+      // container.x = app.screen.width;
+      // container.y = app.screen.height
+
+      // container.pivot.x = container.width / 2;
+      // container.pivot.y = container.height / 2;
+      // stage.addChild(container);
+
+      loader.add('image', require('../assets/angry-trump.png'));
+      loader.load();
+      loader.onComplete.add(onAssetsLoaded);
+    
+      function onAssetsLoaded () { 
+        createElements();
+        update();
+      }
+    
+      function createElements () {
+        const texture = loader.resources['image'].texture;
+        const sprite = new PIXI.Sprite.from(texture);
+
+        // setting up sprite x and y coords, height, width etc
+
+        sprite.width = 100;
+        sprite.height= 100;
+        // center the sprite's anchor point
+        sprite.anchor.set(0.5);
+
+        // move the sprite to the center of the screen
+        sprite.x = app.screen.width / 2;
+        sprite.y = app.screen.height / 2;
+
+        app.stage.addChild(sprite);
+
+        app.ticker.add(() => {
+            // just for fun, let's rotate mr rabbit a little
+            sprite.rotation += 0.01;
+        });
+
+        // container.addChild(sprite);
+      }
+
+      function update () {
+        renderer.render(stage);
+        requestAnimationFrame(update);
+      }
+    });
+  },
 };
 </script>
 
